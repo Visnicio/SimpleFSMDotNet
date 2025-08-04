@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=3 uid="uid://bitq04eo6wmlg"]
+
+[ext_resource type="Texture2D" uid="uid://cc8357s31ox7j" path="res://demo/assets/Tiny Swords/Tiny Swords (Update 010)/Factions/Knights/Troops/Archer/Red/Archer_Red.png" id="1_euw2q"]
+[ext_resource type="Script" uid="uid://dsdrjp4687to0" path="res://demo/Player.cs" id="1_giqk6"]
+[ext_resource type="Script" uid="uid://dhltw6o64kg7k" path="res://addons/SimpleFSMDotNet/SimpleFSMBrain.cs" id="3_uuw2b"]
+[ext_resource type="Script" uid="uid://dmm0r34u8fhju" path="res://demo/IdleState.cs" id="4_pdims"]
+[ext_resource type="Script" uid="uid://bp55uyl2narer" path="res://demo/WalkingState.cs" id="4_uuw2b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yji6d"]
+radius = 33.0606
+
+[sub_resource type="Animation" id="Animation_uuw2b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_giqk6"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_yji6d"]
+resource_name = "running"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [8, 9, 10, 11, 12, 13]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pdims"]
+_data = {
+&"RESET": SubResource("Animation_uuw2b"),
+&"idle": SubResource("Animation_giqk6"),
+&"running": SubResource("Animation_yji6d")
+}
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("currentStateLabel", "aiBrain")]
+script = ExtResource("1_giqk6")
+currentStateLabel = NodePath("CurrentStateLabel")
+aiBrain = NodePath("SimpleFSMBrain")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_yji6d")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_euw2q")
+hframes = 8
+vframes = 7
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_pdims")
+}
+
+[node name="SimpleFSMBrain" type="Node" parent="." node_paths=PackedStringArray("initialState")]
+script = ExtResource("3_uuw2b")
+initialState = NodePath("IdleState")
+metadata/_custom_type_script = "uid://dhltw6o64kg7k"
+
+[node name="IdleState" type="Node" parent="SimpleFSMBrain" node_paths=PackedStringArray("animPlayer", "node")]
+script = ExtResource("4_pdims")
+animPlayer = NodePath("../../AnimationPlayer")
+node = NodePath("../..")
+metadata/_custom_type_script = "uid://b5v67oib8xouk"
+
+[node name="WalkingState" type="Node" parent="SimpleFSMBrain" node_paths=PackedStringArray("animPlayer", "sprite", "node")]
+script = ExtResource("4_uuw2b")
+animPlayer = NodePath("../../AnimationPlayer")
+sprite = NodePath("../../Sprite2D")
+node = NodePath("../..")
+metadata/_custom_type_script = "uid://b5v67oib8xouk"
+
+[node name="CurrentStateLabel" type="Label" parent="."]
+offset_left = -50.0
+offset_top = -68.0
+offset_right = 50.0
+offset_bottom = -45.0
+text = "CurrentState"
