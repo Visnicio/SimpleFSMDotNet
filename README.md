@@ -7,7 +7,7 @@
  2. Enable the addon by ticking the enable checkbox at Project -> Project Settings -> addons
 
 # About
-This is a simple rework from my past fsm implementation for gdscript purists, no dedicated editors, just create the script and use it.
+This is a simple rework from [my past fsm implementation for gdscript purists](https://github.com/Visnicio/SimpleFSM), no dedicated editors, just create the script and use it.
 I intend to keep adding functionality to this addon but its not supposed to evolve firthuer than just being a "fuck, I need a FSM" solution.
 In almost every game I game I need a FSM for something and this always save my butt from having to code it from scratch.
 
